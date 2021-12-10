@@ -41,22 +41,19 @@ let score2 stack =
 	!x;;
 
 let rec complete stack line = match(stack, line) with
-	| [], [] -> 0
 	| stack, [] -> score2 stack
 	| stack, l::line ->
 		if l = '(' || l = '[' || l = '{' || l = '<' then complete (l::stack) line
 		else if List.length stack = 0 then
-			0
+			-1
 		else 
 			let s = List.hd stack in
 			if l = ')' && s = '(' || l = ']' && s = '[' || l = '}' && s = '{' || l = '>' && s = '<' then
 				complete (List.tl stack) line
 			else
-				0;;
+				-1;;
 
-let l = (List.sort (Int.compare) (List.filter (fun x -> x>0) (List.map (complete []) (List.map explode inp))));;
-
-Printf.printf "%d\n" (List.length l);;
+let l = (List.sort (Int.compare) (List.filter (fun x -> x > -1) (List.map (complete []) (List.map explode inp))));;
 
 Printf.printf "%d\n" (List.nth l ((List.length l) / 2))
 
